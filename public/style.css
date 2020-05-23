@@ -39,7 +39,7 @@ canvas {
 
 .start {
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 100; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -57,4 +57,30 @@ canvas {
   background-color: white;
   display: flex;
   flex-direction: column;
+}
+
+.video {
+
+}
+
+.video-show {
+  display: none;
+  flex-direction: column;
+  padding: 10;
+}
+
+.canvas-overlay {
+  width: 1000;
+  height: 600;
+  position: fixed;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.video-button {
+  font-size: 30px;
+  border-style: none;
+  background-color: transparent;
 }

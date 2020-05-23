@@ -20,11 +20,26 @@
       <div class="game-container">
 
 
-        <input id="link" value="" type="text" placeholder="youtube link" />
-        <button onclick="play()">Play</button>
-        <iframe id="video-player" width="400" height="250"
-        src="https://www.youtube.com/embed/wXhTHyIgQ_U">
-        </iframe>
+      
+      <div class="canvas-overlay">
+
+        <div class="video">
+          <div id="video-hide">
+            <button class="video-button" onclick="openVideo()">+</button>
+          </div>
+          <div id="video-show">
+          <iframe id="video-player" width="400" height="250"
+          src="https://www.youtube.com/embed/wXhTHyIgQ_U">
+          </iframe>
+          <button class="video-button" onclick="closeVideo()">x</button>
+          <br />
+          <input id="link" value="" type="text" placeholder="youtube link" />
+          <button onclick="play()">Play</button>
+        </div>
+        </div>
+
+
+      </div>
 
       <canvas id="canvas"></canvas>
       </div>

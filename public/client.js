@@ -19,15 +19,28 @@ $("form").submit(function () {
 
 
 
+
+
+
+function openVideo() {
+  document.getElementById("video-hide").style.display = "none";
+  document.getElementById("video-show").style.display = "block";
+}
+
+function closeVideo() {
+  document.getElementById("video-hide").style.display = "block";
+  document.getElementById("video-show").style.display = "none";
+}
+
 function play() {
   event.preventDefault();
   var localLink = document.getElementById("link").value;
-  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + localLink.slice(32) + "?autoplay=1  ";
+  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + localLink.slice(32) + "?autoplay=1";
   socket.emit("youtube", localLink);
 }
 
 socket.on("youtube", function (data) {
-  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + data.slice(32) + "?autoplay=1  ";
+  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + data.slice(32) + "?autoplay=1";
 });
 
 function login() {
@@ -37,6 +50,12 @@ function login() {
   socket.emit("newPlayer", { color: localColor, name: localName });
   document.getElementById("start").style.display = "none";
 }
+
+
+
+
+
+
 
 var movement = {
   up: false,
