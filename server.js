@@ -64,6 +64,6 @@ setInterval(function() {
 }, 1000 / 60);
 
 //running on 7777...
-server.listen(7777);
+server.listen(process.env.PORT || 7777);
 // server.listen(process.env.PORT);
 
