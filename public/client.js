@@ -19,6 +19,17 @@ $("form").submit(function () {
 
 
 
+function play() {
+  event.preventDefault();
+  var localLink = document.getElementById("link").value;
+  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + localLink.slice(32) + "?autoplay=1  ";
+  socket.emit("youtube", localLink);
+}
+
+socket.on("youtube", function (data) {
+  document.getElementById("video-player").src = "https://www.youtube.com/embed/" + data.slice(32) + "?autoplay=1  ";
+});
+
 function login() {
   event.preventDefault();
   var localName = document.getElementById("name").value;
@@ -88,7 +99,7 @@ socket.on("state", function (players) {
 
 
   context.beginPath();
-  context.fillStyle = "green";
+  context.fillStyle = "gray";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   context.font = "15px Arial";

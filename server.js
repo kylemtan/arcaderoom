@@ -25,6 +25,11 @@ io.on("connection", function(client) {
     client.broadcast.emit("thread", data);
   });
 
+  client.on('youtube', function(data) {
+    client.broadcast.emit("youtube", data);
+    console.log(1);
+  });
+
   client.on("newPlayer", function(data) {
     players[client.id] = {
       x: 300,

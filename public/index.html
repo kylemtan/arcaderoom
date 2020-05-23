@@ -6,7 +6,7 @@
   </head>
   <body>
     
-    <h1>Soccer</h1>
+    <h1>Lobby</h1>
     
     <div class="container">
       <div class="chat-container">
@@ -18,6 +18,14 @@
         <ul id="thread"></ul>
       </div>
       <div class="game-container">
+
+
+        <input id="link" value="" type="text" placeholder="youtube link" />
+        <button onclick="play()">Play</button>
+        <iframe id="video-player" width="400" height="250"
+        src="https://www.youtube.com/embed/wXhTHyIgQ_U">
+        </iframe>
+
       <canvas id="canvas"></canvas>
       </div>
     </div>
@@ -27,11 +35,11 @@
 
     <div class="start" id="start">
       <div class="start-contents">
-      <h2>Welcome to Soccer!</h2>
+      <h2>Welcome to arcade-chatroom!</h2>
       <form id="form">
         <input id="name" value="JOE" type="text" placeholder="name" />
         <input id="color" value="blue" type="text" placeholder="color" />
-        <button onclick="login()"> value="Send" </button>
+        <button onclick="login()">Play!</button>
       </form>
     </div>
 
