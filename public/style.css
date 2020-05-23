@@ -1,0 +1,60 @@
+html, body {
+    text-align: center;
+    font-family: 'Avenir Next', 'Helvetica', 'Arial', sans-serif;
+  }
+
+  html,body,li,form,ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  form {
+    padding-bottom: 2%;
+  }
+
+  li {
+    list-style: none;
+    width: 100%;
+  }
+
+  li:nth-child(odd) {
+    background: #eee;
+  }
+
+canvas {
+    width: 1000px;
+    height: 600px;
+    border: 5px solid black;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.chat-container {
+  border: 3px solid black;
+  width: 250px;
+}
+
+.start {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.start-contents {
+  width: 600;
+  height: 200;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
