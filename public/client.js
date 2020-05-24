@@ -52,6 +52,26 @@ function login() {
   socket.emit("messages", "🎉" + localName + " has joined the room!🎉");
 }
 
+
+var mouseX = 0;
+var mouseY = 0;
+var overlay = document.getElementById("overlay");
+
+function getMousePos(overlay, evt) {
+  var rect = overlay.getBoundingClientRect();
+  return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+  };
+}
+
+overlay.addEventListener("mousemove", function (evt) {
+  var mouse = getMousePos(overlay, evt);
+  mouseX = mouse.x;
+  mouseY = mouse.y;
+}, false);
+
+
 var playerData = {
   up: false,
   down: false,
@@ -59,21 +79,26 @@ var playerData = {
   right: false,
   kick: false,
   emote: false,
+  mouseX: 0,
+  mouseY: 0,
   room: ""
 };
 
+
+
 document.addEventListener("keydown", function (event) {
+  console.log(playerData.mouseX);
   switch (event.keyCode) {
-    case 37:
+    case 65:
       playerData.left = true;
       break;
-    case 38: // W
+    case 87: // W
       playerData.up = true;
       break;
-    case 39: // D
+    case 68: // D
       playerData.right = true;
       break;
-    case 40: // S
+    case 83: // S
       playerData.down = true;
       break;
     case 32: 
@@ -86,16 +111,16 @@ document.addEventListener("keydown", function (event) {
 });
 document.addEventListener("keyup", function (event) {
   switch (event.keyCode) {
-    case 37: // A
+    case 65: // A
       playerData.left = false;
       break;
-    case 38: // W
+    case 87: // W
       playerData.up = false;
       break;
-    case 39: // D
+    case 68: // D
       playerData.right = false;
       break;
-    case 40: // S
+    case 83: // S
       playerData.down = false;
       break;
     case 32: 
@@ -108,10 +133,19 @@ document.addEventListener("keyup", function (event) {
 });
 
 setInterval(function () {
+  playerData.mouseX = mouseX;
+  playerData.mouseY = mouseY;
   socket.emit("playerData", playerData);
 }, 1000 / 60);
 
-
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  } 
+  return color;
+}
 
 var canvas = document.getElementById("canvas");
 canvas.width = 1000;
@@ -120,11 +154,114 @@ var context = canvas.getContext("2d");
 socket.on("state", function (players) {
   context.clearRect(0, 0, 1000, 600);
 
+  context.fillStyle = "gray";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+
+  context.fillStyle = "lightgray";
+  context.fillRect(710, 400, 190, 190);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(720, 410, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(720, 470, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(720, 530, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(780, 410, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(780, 470, 50, 50);
+  
+  context.fillStyle = getRandomColor();
+  context.fillRect(780, 530, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(840, 410, 50, 50);
+
+  context.fillStyle = getRandomColor();
+  context.fillRect(840, 470, 50, 50);
+  
+  context.fillStyle = getRandomColor();
+  context.fillRect(840, 530, 50, 50);
+
+  context.beginPath();
+  context.arc(1000, 500, 100, 0.5 * Math.PI, 1.5 * Math.PI);
+  context.fillStyle = "lightgray";
+  context.fill();
+
+
 
 
   context.beginPath();
-  context.fillStyle = "gray";
-  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.arc(950, 450, 10, 0, 2 * Math.PI);
+  context.fillStyle = "red";
+  context.fill();
+
+  context.beginPath();
+  context.arc(935, 450, 4, 0, 2 * Math.PI);
+  context.fillStyle = "red";
+  context.fill();
+
+  context.beginPath();
+  context.arc(963, 455, 4, 0, 2 * Math.PI);
+  context.fillStyle = "red";
+  context.fill();
+
+  context.beginPath();
+  context.fillStyle = "black";
+  context.fill();
+  context.fillText("🎸", 955, 458);
+
+
+
+
+  context.beginPath();
+  context.arc(950, 500, 10, 0, 2 * Math.PI);
+  context.fillStyle = "green";
+  context.fill();
+
+  context.beginPath();
+  context.arc(935, 506, 5, 0, 2 * Math.PI);
+  context.fillStyle = "green";
+  context.fill();
+
+  context.beginPath();
+  context.arc(963, 505, 4, 0, 2 * Math.PI);
+  context.fillStyle = "green";
+  context.fill();
+
+  context.beginPath();
+  context.fillStyle = "black";
+  context.fill();
+  context.fillText("🎤", 937, 510);
+
+
+
+  context.beginPath();
+  context.arc(950, 550, 10, 0, 2 * Math.PI);
+  context.fillStyle = "blue";
+  context.fill();
+
+  context.beginPath();
+  context.arc(937, 555, 4, 0, 2 * Math.PI);
+  context.fillStyle = "blue";
+  context.fill();
+
+  context.beginPath();
+  context.arc(963, 555, 4, 0, 2 * Math.PI);
+  context.fillStyle = "blue";
+  context.fill();
+
+  context.beginPath();
+  context.fillStyle = "black";
+  context.fill();
+  context.fillText("🥁", 950, 565);
+
+
 
   context.font = "15px Arial";
   context.textAlign = "center";
@@ -132,45 +269,67 @@ socket.on("state", function (players) {
   for (var id in players) {
     var player = players[id];
 
-  if(players[id].kick === true){
+  if(player.kick === true){
     context.beginPath();
     context.arc(player.x, player.y, 14, 0, 2 * Math.PI);
     context.fillStyle = "white";
     context.fill();
 
+    context.setTransform(1, 0, 0, 1, player.x, player.y);
+
+
+    context.rotate(Math.atan2(player.mouseY - player.y, player.mouseX - player.x));
+
     context.beginPath();
-    context.arc(player.x-15, player.y - players[id].emoteHeight, 8, 0, 2 * Math.PI);
+    context.arc(0 + player.emoteHeight, -15, 8, 0, 2 * Math.PI);
     context.fillStyle = "white";
     context.fill();
 
     context.beginPath();
-    context.arc(player.x+15, player.y - players[id].emoteHeight, 8, 0, 2 * Math.PI);
+    context.arc(0 + player.emoteHeight, 15, 8, 0, 2 * Math.PI);
     context.fillStyle = "white";
     context.fill();
+
+    context.setTransform(1, 0, 0, 1, 0, 0);
   }
+
+
 
     context.beginPath();
     context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-    context.fillStyle = players[id].color;
+    context.fillStyle = player.color;
+    context.fill();
+
+    context.setTransform(1, 0, 0, 1, player.x, player.y);
+
+
+    context.rotate(Math.atan2(player.mouseY - player.y, player.mouseX - player.x));
+
+    context.beginPath();
+    context.arc(0 + player.emoteHeight, -15, 4, 0, 2 * Math.PI);
+    context.fillStyle = player.color;
     context.fill();
 
     context.beginPath();
-    context.arc(player.x - 15, player.y - players[id].emoteHeight, 4, 0, 2 * Math.PI);
-    context.fillStyle = players[id].color;
-    context.fill();
-
-    context.beginPath();
-    context.arc(player.x + 15, player.y - players[id].emoteHeight, 4, 0, 2 * Math.PI);
-    context.fillStyle = players[id].color;
+    context.arc(0 + player.emoteHeight, 15, 4, 0, 2 * Math.PI);
+    context.fillStyle = player.color;
     context.fill();
     
+    context.setTransform(1, 0, 0, 1, 0, 0);
+
 
     context.beginPath();
     context.fillStyle = "black";
     context.fill();
-    context.fillText(players[id].name, player.x, player.y-15);
+    context.fillText(player.name, player.x, player.y-15);
     
   }
+
+  context.beginPath();
+  context.arc(mouseX, mouseY, 1, 0, 2 * Math.PI);
+  context.fillStyle = "black";
+    context.fill();
+
 
 
 });

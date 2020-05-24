@@ -59,10 +59,6 @@ canvas {
   flex-direction: column;
 }
 
-.video {
-
-}
-
 .video-show {
   display: none;
   flex-direction: column;

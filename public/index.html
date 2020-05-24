@@ -21,7 +21,7 @@
 
 
       
-      <div class="canvas-overlay">
+      <div class="canvas-overlay" id="overlay">
 
         <div class="video">
           <div id="video-hide">
@@ -29,7 +29,7 @@
           </div>
           <div id="video-show">
           <iframe id="video-player" width="400" height="250"
-          src="https://www.youtube.com/embed/wXhTHyIgQ_U">
+          src="https://www.youtube.com/embed/wXhTHyIgQ_U" frameborder="0" allowfullscreen>
           </iframe>
           <button class="video-button" onclick="closeVideo()">x</button>
           <br />
@@ -47,6 +47,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <div class="start" id="start">
       <div class="start-contents">

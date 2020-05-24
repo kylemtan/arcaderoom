@@ -41,6 +41,8 @@ io.on("connection", function(client) {
       emote: false,
       emoteHeight: 0,
       emoteSpeed: -0.5,
+      mouseX: 0, 
+      mouseY: 0,
     };
     console.log(players);
   });
@@ -78,18 +80,13 @@ io.on("connection", function(client) {
       player.emoteHeight = 0;
       player.emoteSpeed = -0.5;
     }
+    player.mouseX = data.mouseX;
+    player.mouseY = data.mouseY;
   });
   client.on('disconnect', function() {
     //client.emit("thread", "😔 " + players[client.id[name]] + " has left the room.😔");
     //client.broadcast.emit("thread", "😔 " + players[client.id[name]] + " has left the room.😔");
     delete players[client.id];
-  });
-});
-
-io.of('/user').on('connection', function(client) {
-  ss(client).on('profile-image', function(stream, data) {
-    var filename = path.basename(data.name);
-    stream.pipe(fs.createWriteStream(filename));
   });
 });
 
