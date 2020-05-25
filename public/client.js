@@ -67,8 +67,8 @@ function getMousePos(overlay, evt) {
 
 overlay.addEventListener("mousemove", function (evt) {
   var mouse = getMousePos(overlay, evt);
-  mouseX = mouse.x;
-  mouseY = mouse.y;
+  mouseX = mouse.x-4;
+  mouseY = mouse.y-3;
 }, false);
 
 
@@ -79,15 +79,16 @@ var playerData = {
   right: false,
   kick: false,
   emote: false,
+  interact: false,
   mouseX: 0,
   mouseY: 0,
-  room: ""
+  room: "",
+  item: "",
 };
 
 
 
 document.addEventListener("keydown", function (event) {
-  console.log(playerData.mouseX);
   switch (event.keyCode) {
     case 65:
       playerData.left = true;
@@ -106,6 +107,9 @@ document.addEventListener("keydown", function (event) {
       break;
     case 49: 
       playerData.emote = true;
+      break;
+    case 69:
+      playerData.interact = true;
       break;
   }
 });
@@ -129,14 +133,11 @@ document.addEventListener("keyup", function (event) {
     case 49: 
       playerData.emote = false;
       break;
+    case 69:
+      playerData.interact = false;
+      break;
     }
 });
-
-setInterval(function () {
-  playerData.mouseX = mouseX;
-  playerData.mouseY = mouseY;
-  socket.emit("playerData", playerData);
-}, 1000 / 60);
 
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
@@ -147,189 +148,112 @@ function getRandomColor() {
   return color;
 }
 
-var canvas = document.getElementById("canvas");
-canvas.width = 1000;
-canvas.height = 600;
-var context = canvas.getContext("2d");
+
+
+var svg = document.getElementById("svg");
+var NS = "http://www.w3.org/2000/svg";
+
 socket.on("state", function (players) {
-  context.clearRect(0, 0, 1000, 600);
+  while (svg.lastChild) {
+    svg.removeChild(svg.lastChild);
+}
 
-  context.fillStyle = "gray";
-  context.fillRect(0, 0, canvas.width, canvas.height);
 
 
-  context.fillStyle = "lightgray";
-  context.fillRect(710, 400, 190, 190);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(720, 410, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(720, 470, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(720, 530, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(780, 410, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(780, 470, 50, 50);
-  
-  context.fillStyle = getRandomColor();
-  context.fillRect(780, 530, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(840, 410, 50, 50);
-
-  context.fillStyle = getRandomColor();
-  context.fillRect(840, 470, 50, 50);
-  
-  context.fillStyle = getRandomColor();
-  context.fillRect(840, 530, 50, 50);
-
-  context.beginPath();
-  context.arc(1000, 500, 100, 0.5 * Math.PI, 1.5 * Math.PI);
-  context.fillStyle = "lightgray";
-  context.fill();
+var tiles = document.getElementsByClassName("danceFloor");
+for (var e = 0; e < 9; e++){
+  tiles[e].style.fill = getRandomColor();
+}
 
 
 
 
-  context.beginPath();
-  context.arc(950, 450, 10, 0, 2 * Math.PI);
-  context.fillStyle = "red";
-  context.fill();
 
-  context.beginPath();
-  context.arc(935, 450, 4, 0, 2 * Math.PI);
-  context.fillStyle = "red";
-  context.fill();
-
-  context.beginPath();
-  context.arc(963, 455, 4, 0, 2 * Math.PI);
-  context.fillStyle = "red";
-  context.fill();
-
-  context.beginPath();
-  context.fillStyle = "black";
-  context.fill();
-  context.fillText("🎸", 955, 458);
-
-
-
-
-  context.beginPath();
-  context.arc(950, 500, 10, 0, 2 * Math.PI);
-  context.fillStyle = "green";
-  context.fill();
-
-  context.beginPath();
-  context.arc(935, 506, 5, 0, 2 * Math.PI);
-  context.fillStyle = "green";
-  context.fill();
-
-  context.beginPath();
-  context.arc(963, 505, 4, 0, 2 * Math.PI);
-  context.fillStyle = "green";
-  context.fill();
-
-  context.beginPath();
-  context.fillStyle = "black";
-  context.fill();
-  context.fillText("🎤", 937, 510);
-
-
-
-  context.beginPath();
-  context.arc(950, 550, 10, 0, 2 * Math.PI);
-  context.fillStyle = "blue";
-  context.fill();
-
-  context.beginPath();
-  context.arc(937, 555, 4, 0, 2 * Math.PI);
-  context.fillStyle = "blue";
-  context.fill();
-
-  context.beginPath();
-  context.arc(963, 555, 4, 0, 2 * Math.PI);
-  context.fillStyle = "blue";
-  context.fill();
-
-  context.beginPath();
-  context.fillStyle = "black";
-  context.fill();
-  context.fillText("🥁", 950, 565);
-
-
-
-  context.font = "15px Arial";
-  context.textAlign = "center";
 
   for (var id in players) {
     var player = players[id];
 
+  var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
+  var degrees = rotateNumber * (180 / Math.PI) * -1 + 90;
+
   if(player.kick === true){
-    context.beginPath();
-    context.arc(player.x, player.y, 14, 0, 2 * Math.PI);
-    context.fillStyle = "white";
-    context.fill();
+    var kickBody = document.createElementNS(NS, "circle");
+    kickBody.setAttribute("cx", player.x);
+    kickBody.setAttribute("cy", player.y);
+    kickBody.setAttribute("r", 14);
+    kickBody.setAttribute("fill", "white");
+    svg.appendChild(kickBody);
 
-    context.setTransform(1, 0, 0, 1, player.x, player.y);
+    var kickHand1 = document.createElementNS(NS, "circle");
+    kickHand1.setAttribute("cx", player.x + player.emoteHeight);
+    kickHand1.setAttribute("cy", player.y - 15);
+    kickHand1.setAttribute("r", 8);
+    kickHand1.setAttribute("fill", "white");
+    kickHand1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+    svg.appendChild(kickHand1);
 
-
-    context.rotate(Math.atan2(player.mouseY - player.y, player.mouseX - player.x));
-
-    context.beginPath();
-    context.arc(0 + player.emoteHeight, -15, 8, 0, 2 * Math.PI);
-    context.fillStyle = "white";
-    context.fill();
-
-    context.beginPath();
-    context.arc(0 + player.emoteHeight, 15, 8, 0, 2 * Math.PI);
-    context.fillStyle = "white";
-    context.fill();
-
-    context.setTransform(1, 0, 0, 1, 0, 0);
+    var kickHand2 = document.createElementNS(NS, "circle");
+    kickHand2.setAttribute("cx", player.x + player.emoteHeight);
+    kickHand2.setAttribute("cy", player.y + 15);
+    kickHand2.setAttribute("r", 8);
+    kickHand2.setAttribute("fill", "white");
+    kickHand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+    svg.appendChild(kickHand2);
   }
 
 
 
-    context.beginPath();
-    context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-    context.fillStyle = player.color;
-    context.fill();
+  var body = document.createElementNS(NS, "circle");
+  body.setAttribute("cx", player.x);
+  body.setAttribute("cy", player.y);
+  body.setAttribute("r", 10);
+  body.setAttribute("fill", player.color);
+  svg.appendChild(body);
 
-    context.setTransform(1, 0, 0, 1, player.x, player.y);
+  var hand1 = document.createElementNS(NS, "circle");
+  hand1.setAttribute("cx", player.x + player.emoteHeight);
+  hand1.setAttribute("cy", player.y - 15);
+  hand1.setAttribute("r", 4);
+  hand1.setAttribute("fill", player.color);
+  hand1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(hand1);
 
+  var hand2 = document.createElementNS(NS, "circle");
+  hand2.setAttribute("cx", player.x + player.emoteHeight);
+  hand2.setAttribute("cy", player.y + 15);
+  hand2.setAttribute("r", 4);
+  hand2.setAttribute("fill", player.color);
+  hand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(hand2);
 
-    context.rotate(Math.atan2(player.mouseY - player.y, player.mouseX - player.x));
+  console.log(degrees);
+ 
 
-    context.beginPath();
-    context.arc(0 + player.emoteHeight, -15, 4, 0, 2 * Math.PI);
-    context.fillStyle = player.color;
-    context.fill();
+    if(player.item === "donut" || player.interact && player.y > 570 && player.x < 30 && player.item === ""){
+      player.item = "donut";
+      context.fillText("🍩", 0 + player.emoteHeight, -15);
+      }
 
-    context.beginPath();
-    context.arc(0 + player.emoteHeight, 15, 4, 0, 2 * Math.PI);
-    context.fillStyle = player.color;
-    context.fill();
-    
-    context.setTransform(1, 0, 0, 1, 0, 0);
-
-
-    context.beginPath();
-    context.fillStyle = "black";
-    context.fill();
-    context.fillText(player.name, player.x, player.y-15);
-    
+      var name = document.createElementNS(NS, "text");
+      name.setAttribute("x", player.x);
+      name.setAttribute("y", player.y-11);
+      name.setAttribute("id", player.name);
+      var nameFinal = document.createTextNode(player.name);
+      name.appendChild(nameFinal);
+      svg.appendChild(name);
+      var nameTemp = document.getElementById(player.name)
+      var resizeMiddle = nameTemp.getBBox();
+      svg.removeChild(nameTemp);
+      name.setAttribute("x", player.x - resizeMiddle.width/2);
+      svg.appendChild(name);
   }
-
-  context.beginPath();
-  context.arc(mouseX, mouseY, 1, 0, 2 * Math.PI);
-  context.fillStyle = "black";
-    context.fill();
-
-
-
 });
+
+
+
+setInterval(function () {
+  playerData.mouseX = mouseX;
+  playerData.mouseY = mouseY;
+  socket.emit("playerData", playerData);
+}, 1000 / 60);
+

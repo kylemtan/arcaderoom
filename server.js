@@ -39,10 +39,13 @@ io.on("connection", function(client) {
       color: data.color,
       name: data.name,
       emote: false,
+      interact: false,
       emoteHeight: 0,
       emoteSpeed: -0.5,
       mouseX: 0, 
       mouseY: 0,
+      room: "",
+      item: "",
     };
     console.log(players);
   });
@@ -71,6 +74,14 @@ io.on("connection", function(client) {
       player.emote = false;
     }
 
+    if (data.interact) {
+      player.interact = true;
+    } else {
+      player.interact = false;
+    }
+
+    player.item = data.item;
+
     if(player.emote === true){
       player.emoteHeight-=player.emoteSpeed;
       if(player.emoteHeight === 0 || player.emoteHeight === 15){
@@ -84,8 +95,9 @@ io.on("connection", function(client) {
     player.mouseY = data.mouseY;
   });
   client.on('disconnect', function() {
-    //client.emit("thread", "😔 " + players[client.id[name]] + " has left the room.😔");
-    //client.broadcast.emit("thread", "😔 " + players[client.id[name]] + " has left the room.😔");
+    //console.log(players[client.id].name);
+    // client.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
+    // client.broadcast.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
     delete players[client.id];
   });
 });
