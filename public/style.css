@@ -96,3 +96,8 @@ html, body {
   border-style: none;
   background-color: transparent;
 }
+
+.messages {
+  overflow-y: auto;
+  height: 500px;
+}

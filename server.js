@@ -52,16 +52,16 @@ io.on("connection", function(client) {
   client.on('playerData', function(data) {
     var player = players[client.id] || {};
     if (data.left) {
-      player.x -= 6;
+      player.x -= 3;
     }
     if (data.up) {
-      player.y -= 6;
+      player.y -= 3;
     }
     if (data.right) {
-      player.x += 6;
+      player.x += 3;
     }
     if (data.down) {
-      player.y += 6;
+      player.y += 3;
     }
     if (data.kick) {
       player.kick = true;

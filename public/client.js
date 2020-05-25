@@ -255,5 +255,5 @@ setInterval(function () {
   playerData.mouseX = mouseX;
   playerData.mouseY = mouseY;
   socket.emit("playerData", playerData);
-}, 1000 / 30);
+}, 1000 / 60);
 
