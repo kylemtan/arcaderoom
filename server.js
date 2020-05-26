@@ -13,6 +13,7 @@ app.use(express.static("public"));
 
 var players = {};
 var items = [];
+var itemsThrown = [];
 
 //anything in static.js
 io.on("connection", function(client) {
@@ -29,7 +30,6 @@ io.on("connection", function(client) {
 
   client.on('youtube', function(data) {
     client.broadcast.emit("youtube", data);
-    console.log(1);
   });
 
   client.on("newPlayer", function(data) {
@@ -49,6 +49,45 @@ io.on("connection", function(client) {
     };
     console.log(players);
   });
+
+  client.on("giveDonut",  function(data) {
+    for (var e = 0; e < items.length; e++){
+      if(data === items[e]){
+        items.splice(e,1);
+      }
+    }
+    items.push(data);
+  });
+  client.on("throwDonut",  function(data) {
+    var x = 0;
+    var y = 0;
+    for(var e = 0; e < items.length; e++){
+      if(data === items[e]){
+      items.splice(e,1);
+    }
+    }
+    if(players[client.id].name === data){
+      x = (players[client.id].mouseX - players[client.id].x)/30;
+      y = (players[client.id].mouseY - players[client.id].y)/30;
+      itemsThrown.push(
+        {
+        x: players[client.id].x,
+      y: players[client.id].y,
+      xSpeed: x,
+      ySpeed: y,
+      timer: 0,
+        }
+      );
+  }
+  });
+  client.on("takeDonut",  function(data) {
+    for (var e = 0; e < items.length; e++){
+      if(data === items[e]){
+        items.splice(e,1);
+      }
+    }
+  });
+
   client.on('playerData', function(data) {
     var player = players[client.id] || {};
     if (data.left) {
@@ -92,21 +131,6 @@ io.on("connection", function(client) {
     player.mouseX = data.mouseX;
     player.mouseY = data.mouseY;
   });
-  client.on("giveDonut",  function(data) {
-    for (var e = 0; e < items.length; e++){
-      if(data === items[e]){
-        items.splice(e,1);
-      }
-    }
-    items.push(data);
-  });
-  client.on("takeDonut",  function(data) {
-    for (var e = 0; e < items.length; e++){
-      if(data === items[e]){
-        items.splice(e,1);
-      }
-    }
-  });
   
   client.on('disconnect', function() {
     //console.log(players[client.id].name);
@@ -119,11 +143,26 @@ io.on("connection", function(client) {
 
 
 setInterval(function() {
-  io.sockets.emit('state', { players: players, items: items });
+  
+  console.log(itemsThrown.length);
+  //updating all itemsThrown
+  for(var e = 0; e < itemsThrown.length; e++){
+    
+    itemsThrown[e].timer += 1;
+    if(itemsThrown[e].timer < 40){
+      itemsThrown[e].x += itemsThrown[e].xSpeed;
+      itemsThrown[e].y += itemsThrown[e].ySpeed;
+    }
+    if(itemsThrown[e].timer > 150){
+      itemsThrown.splice(e, 1);
+    }
+
+ }
+  io.sockets.emit('state', { players: players, items: items, itemsThrown: itemsThrown });
 }, 1000 / 60);
 
 setInterval(function() {
-  console.log(items);
+  console.log(itemsThrown);
 }, 1000);
 
 //running on 7777...

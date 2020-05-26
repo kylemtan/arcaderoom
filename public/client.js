@@ -228,17 +228,25 @@ for (var e = 0; e < 9; e++){
   svg.appendChild(hand2); 
 
   var items = data.items;
-    if(player.interact && player.y > 500 && player.x < 100){
+    if(player.interact && player.y > 500 && player.x < 100 || player.interact && player.y < 100 && player.x < 100){
       socket.emit("giveDonut", player.name);
     }
+    
     if(player.kick){
-      socket.emit("takeDonut", player.name);
+      for(var g = 0; g < items.length; g++){
+        if(items[g] = player){
+          socket.emit("throwDonut", player.name);
+          break;
+        }
+      }
+      
     }
     for(var e = 0; e < items.length; e++){
     if(items[e] === player.name){
       var donut = document.createElementNS(NS, "text");
-      donut.setAttribute("x", player.x + player.emoteHeight);
-      donut.setAttribute("y", player.y - 15);
+      donut.setAttribute("x", player.x + player.emoteHeight + 10);
+      donut.setAttribute("y", player.y + 5);
+      donut.setAttribute("transform", "rotate(" + (degrees + 90) + " " + player.x + " " + player.y + ")");
       var donutFinal = document.createTextNode("🍩");
       donut.appendChild(donutFinal);
       svg.appendChild(donut);
@@ -250,15 +258,26 @@ for (var e = 0; e < 9; e++){
       var name = document.createElementNS(NS, "text");
       name.setAttribute("x", player.x);
       name.setAttribute("y", player.y-11);
-      name.setAttribute("id", player.name);
+      name.setAttribute("id", player);
       var nameFinal = document.createTextNode(player.name);
       name.appendChild(nameFinal);
       svg.appendChild(name);
-      var nameTemp = document.getElementById(player.name)
+      var nameTemp = document.getElementById(player)
       var resizeMiddle = nameTemp.getBBox();
       svg.removeChild(nameTemp);
       name.setAttribute("x", player.x - resizeMiddle.width/2);
       svg.appendChild(name);
+
+  var itemsThrown = data.itemsThrown;
+  for(var e = 0; e < itemsThrown.length; e++){
+    var thrownDonut = document.createElementNS(NS, "text");
+    thrownDonut.setAttribute("x", itemsThrown[e].x);
+    thrownDonut.setAttribute("y", itemsThrown[e].y);
+    var thrownDonutFinal = document.createTextNode("🍩");
+    thrownDonut.appendChild(thrownDonutFinal);
+    svg.appendChild(thrownDonut);
+  }
+
   }
 });
 
