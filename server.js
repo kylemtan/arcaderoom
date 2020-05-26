@@ -12,6 +12,7 @@ app.get("/", function(req, res, next) {
 app.use(express.static("public"));
 
 var players = {};
+var items = [];
 
 //anything in static.js
 io.on("connection", function(client) {
@@ -45,7 +46,6 @@ io.on("connection", function(client) {
       mouseX: 0, 
       mouseY: 0,
       room: "",
-      item: "",
     };
     console.log(players);
   });
@@ -80,8 +80,6 @@ io.on("connection", function(client) {
       player.interact = false;
     }
 
-    player.item = data.item;
-
     if(player.emote === true){
       player.emoteHeight-=player.emoteSpeed;
       if(player.emoteHeight === 0 || player.emoteHeight === 15){
@@ -94,6 +92,22 @@ io.on("connection", function(client) {
     player.mouseX = data.mouseX;
     player.mouseY = data.mouseY;
   });
+  client.on("giveDonut",  function(data) {
+    for (var e = 0; e < items.length; e++){
+      if(data === items[e]){
+        items.splice(e,1);
+      }
+    }
+    items.push(data);
+  });
+  client.on("takeDonut",  function(data) {
+    for (var e = 0; e < items.length; e++){
+      if(data === items[e]){
+        items.splice(e,1);
+      }
+    }
+  });
+  
   client.on('disconnect', function() {
     //console.log(players[client.id].name);
     // client.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
@@ -105,8 +119,12 @@ io.on("connection", function(client) {
 
 
 setInterval(function() {
-  io.sockets.emit('state', players);
+  io.sockets.emit('state', { players: players, items: items });
 }, 1000 / 60);
+
+setInterval(function() {
+  console.log(items);
+}, 1000);
 
 //running on 7777...
 server.listen(process.env.PORT || 7777);

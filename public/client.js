@@ -83,7 +83,6 @@ var playerData = {
   mouseX: 0,
   mouseY: 0,
   room: "",
-  item: "",
 };
 
 
@@ -139,6 +138,8 @@ document.addEventListener("keyup", function (event) {
     }
 });
 
+
+
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -153,7 +154,7 @@ function getRandomColor() {
 var svg = document.getElementById("svg");
 var NS = "http://www.w3.org/2000/svg";
 
-socket.on("state", function (players) {
+socket.on("state", function (data) {
   while (svg.lastChild) {
     svg.removeChild(svg.lastChild);
 }
@@ -170,8 +171,8 @@ for (var e = 0; e < 9; e++){
 
 
 
-  for (var id in players) {
-    var player = players[id];
+  for (var id in data.players) {
+    var player = data.players[id];
 
   var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
   var degrees = rotateNumber * (180 / Math.PI) * -1 + 90;
@@ -224,15 +225,27 @@ for (var e = 0; e < 9; e++){
   hand2.setAttribute("r", 4);
   hand2.setAttribute("fill", player.color);
   hand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
-  svg.appendChild(hand2);
+  svg.appendChild(hand2); 
 
-  console.log(degrees);
- 
+  var items = data.items;
+    if(player.interact && player.y > 500 && player.x < 100){
+      socket.emit("giveDonut", player.name);
+    }
+    if(player.kick){
+      socket.emit("takeDonut", player.name);
+    }
+    for(var e = 0; e < items.length; e++){
+    if(items[e] === player.name){
+      var donut = document.createElementNS(NS, "text");
+      donut.setAttribute("x", player.x + player.emoteHeight);
+      donut.setAttribute("y", player.y - 15);
+      var donutFinal = document.createTextNode("🍩");
+      donut.appendChild(donutFinal);
+      svg.appendChild(donut);
+    }
+  }
 
-    if(player.item === "donut" || player.interact && player.y > 570 && player.x < 30 && player.item === ""){
-      player.item = "donut";
-      context.fillText("🍩", 0 + player.emoteHeight, -15);
-      }
+
 
       var name = document.createElementNS(NS, "text");
       name.setAttribute("x", player.x);
