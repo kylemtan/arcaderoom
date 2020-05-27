@@ -66,7 +66,7 @@ io.on("connection", function(client) {
     }
   }
     for(var f = 0; f < itemsThrown.length; f++){
-      if(data === itemsThrown[e].name){
+      if(data === itemsThrown[f].name){
       itemsThrown.splice(f,1);
     }
     }
