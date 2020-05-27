@@ -64,6 +64,7 @@ io.on("connection", function(client) {
       if(data === items[e]){
       items.splice(e,1);
     }
+  }
     for(var f = 0; f < itemsThrown.length; f++){
       if(data === itemsThrown[e].name){
       itemsThrown.splice(f,1);
