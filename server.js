@@ -70,7 +70,8 @@ io.on("connection", function(client) {
       y = (players[client.id].mouseY - players[client.id].y)/30;
       itemsThrown.push(
         {
-        x: players[client.id].x,
+      name: players[client.id].name,
+      x: players[client.id].x,
       y: players[client.id].y,
       xSpeed: x,
       ySpeed: y,
@@ -148,6 +149,8 @@ setInterval(function() {
     if(itemsThrown[e].timer < 40){
       itemsThrown[e].x += itemsThrown[e].xSpeed;
       itemsThrown[e].y += itemsThrown[e].ySpeed;
+    } else {
+      itemsThrown[e].name = "";
     }
     if(itemsThrown[e].timer > 150){
       itemsThrown.splice(e, 1);

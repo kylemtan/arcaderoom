@@ -53,6 +53,14 @@ function login() {
       document.getElementById("error").innerHTML = "That name is taken. Please choose another.";
       return false;
     }
+    if(localName === ""){
+      document.getElementById("error").innerHTML = "Your name must include at least one character.";
+      return false;
+    }
+    if(localName.length > 20){
+      document.getElementById("error").innerHTML = "Your name cannot be longer than 20 characters.";
+      return false;
+    }
   }
     socket.emit("newPlayer", { color: localColor, name: localName });
     document.getElementById("start").style.display = "none";
@@ -236,11 +244,19 @@ for (var e = 0; e < 9; e++){
   svg.appendChild(hand2); 
 
   var items = data.items;
+  var itemsThrown = data.itemsThrown;
+  var alreadyThrown = false;
     if(player.interact && player.y > 500 && player.x < 100 || player.interact && player.y < 100 && player.x < 100){
       socket.emit("giveDonut", player.name);
     }
-    
-    if(player.kick){
+
+    for(var e = 0; e < itemsThrown.length; e++){
+      if(itemsThrown[e].name === player.name){
+      alreadyThrown = true;
+    }
+  }
+
+    if(player.kick && alreadyThrown === false){
       for(var g = 0; g < items.length; g++){
         if(items[g] = player){
           socket.emit("throwDonut", player.name);
@@ -276,7 +292,7 @@ for (var e = 0; e < 9; e++){
       name.setAttribute("x", player.x - resizeMiddle.width/2);
       svg.appendChild(name);
 
-  var itemsThrown = data.itemsThrown;
+  
   for(var e = 0; e < itemsThrown.length; e++){
     var thrownDonut = document.createElementNS(NS, "text");
     thrownDonut.setAttribute("x", itemsThrown[e].x);
