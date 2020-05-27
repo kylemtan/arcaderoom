@@ -47,7 +47,6 @@ io.on("connection", function(client) {
       mouseY: 0,
       room: "",
     };
-    console.log(players);
   });
 
   client.on("giveDonut",  function(data) {
@@ -133,7 +132,6 @@ io.on("connection", function(client) {
   });
   
   client.on('disconnect', function() {
-    //console.log(players[client.id].name);
     // client.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
     // client.broadcast.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
     delete players[client.id];
@@ -143,8 +141,6 @@ io.on("connection", function(client) {
 
 
 setInterval(function() {
-  
-  console.log(itemsThrown.length);
   //updating all itemsThrown
   for(var e = 0; e < itemsThrown.length; e++){
     
@@ -162,7 +158,7 @@ setInterval(function() {
 }, 1000 / 60);
 
 setInterval(function() {
-  console.log(itemsThrown);
+  console.log(players);
 }, 1000);
 
 //running on 7777...

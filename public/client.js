@@ -47,9 +47,17 @@ function login() {
   event.preventDefault();
   var localName = document.getElementById("name").value;
   var localColor = document.getElementById("color").value;
-  socket.emit("newPlayer", { color: localColor, name: localName });
-  document.getElementById("start").style.display = "none";
-  socket.emit("messages", "🎉" + localName + " has joined the room!🎉");
+  socket.on("state", function (data) {
+    for(var id in data.players){
+    if(data.players[id].name === localName){
+      document.getElementById("error").innerHTML = "That name is taken. Please choose another.";
+      return false;
+    }
+  }
+    socket.emit("newPlayer", { color: localColor, name: localName });
+    document.getElementById("start").style.display = "none";
+    socket.emit("messages", "🎉" + localName + " has joined the room!🎉");
+  });
 }
 
 
@@ -258,11 +266,11 @@ for (var e = 0; e < 9; e++){
       var name = document.createElementNS(NS, "text");
       name.setAttribute("x", player.x);
       name.setAttribute("y", player.y-11);
-      name.setAttribute("id", player);
+      name.setAttribute("id", player.mouseX);
       var nameFinal = document.createTextNode(player.name);
       name.appendChild(nameFinal);
       svg.appendChild(name);
-      var nameTemp = document.getElementById(player)
+      var nameTemp = document.getElementById(player.mouseX)
       var resizeMiddle = nameTemp.getBBox();
       svg.removeChild(nameTemp);
       name.setAttribute("x", player.x - resizeMiddle.width/2);
@@ -277,7 +285,7 @@ for (var e = 0; e < 9; e++){
     thrownDonut.appendChild(thrownDonutFinal);
     svg.appendChild(thrownDonut);
   }
-
+console.log(data.players);
   }
 });
 
