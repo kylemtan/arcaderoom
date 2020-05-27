@@ -295,8 +295,9 @@ for (var e = 0; e < 9; e++){
       name.setAttribute("x", player.x - resizeMiddle.width/2);
       svg.appendChild(name);
 
-  
+  console.log("updated " + itemsThrown.length + " donuts");
   for(var e = 0; e < itemsThrown.length; e++){
+
     var thrownDonut = document.createElementNS(NS, "text");
     thrownDonut.setAttribute("x", itemsThrown[e].x);
     thrownDonut.setAttribute("y", itemsThrown[e].y);
@@ -304,7 +305,6 @@ for (var e = 0; e < 9; e++){
     thrownDonut.appendChild(thrownDonutFinal);
     svg.appendChild(thrownDonut);
   }
-console.log(data.players);
   }
 });
 
