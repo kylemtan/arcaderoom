@@ -130,6 +130,20 @@ io.on("connection", function(client) {
     }
     player.mouseX = data.mouseX;
     player.mouseY = data.mouseY;
+
+    //collision
+    if(player.x > 990){
+      player.x = 990;
+    }
+    if(player.x < 10){
+      player.x = 10;
+    }
+    if(player.y > 590){
+      player.y = 590;
+    }
+    if(player.y < 10){
+      player.y = 10;
+    }
   });
   
   client.on('disconnect', function() {

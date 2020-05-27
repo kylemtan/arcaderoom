@@ -62,10 +62,11 @@ function login() {
       return false;
     }
   }
-    socket.emit("newPlayer", { color: localColor, name: localName });
+    
+  });
+  socket.emit("newPlayer", { color: localColor, name: localName });
     document.getElementById("start").style.display = "none";
     socket.emit("messages", "🎉" + localName + " has joined the room!🎉");
-  });
 }
 
 
