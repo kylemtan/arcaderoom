@@ -18,10 +18,8 @@ var rooms = [];
 
 //anything in static.js
 io.on("connection", function(client) {
-  console.log("Client connected...");
 
   client.on("join", function(data) {
-    console.log(data);
   });
 
   client.on("messages", function(data) {
@@ -61,41 +59,36 @@ io.on("connection", function(client) {
     var x = 0;
     var y = 0;
     for(var e = 0; e < items.length; e++){
-      if(data === items[e]){
+      if(data.name === items[e]){
       items.splice(e,1);
     }
   }
     for(var f = 0; f < itemsThrown.length; f++){
-      if(data === itemsThrown[f].name){
+      if(data.name === itemsThrown[f].name){
       itemsThrown.splice(f,1);
     }
     }
-    if(players[client.id].name === data){
-      x = (players[client.id].mouseX - players[client.id].x)/30;
-      y = (players[client.id].mouseY - players[client.id].y)/30;
       itemsThrown.push(
         {
-      name: players[client.id].name,
-      x: players[client.id].x,
-      y: players[client.id].y,
-      xSpeed: x,
-      ySpeed: y,
+      name: data.name,
+      x: data.x,
+      y: data.y,
+      xSpeed: data.xSpeed,
+      ySpeed: data.ySpeed,
       timer: 0,
         }
       );
-  }
   });
 
   client.on("roomChange", function(data) {
-    console.log("recieved change")
-    if(data.room === ""){
+    if(data.room = ""){
       for(var f = 0; f < rooms.length; f++){
         if(rooms[f].name === data.name){
           rooms.splice(f,1);
         }
       }
     }
-    if(data.room === "trivia"){
+    if(data.room = "shooter"){
       for(var f = 0; f < rooms.length; f++){
         if(rooms[f].name === data.name){
           rooms.splice(f,1);
@@ -166,18 +159,32 @@ io.on("connection", function(client) {
     if(player.y < 10){
       player.y = 10;
     }
+
+
+
+
+     //checking donut collision
+     for(var e = 0; e < itemsThrown.length; e++){
+      if(itemsThrown[e].x + 20 > player.x - 5 && itemsThrown[e].x < player.x + 5 && itemsThrown[e].y + 20 > player.y - 5 && itemsThrown[e].y < player.y + 5 && itemsThrown[e].name != player.name){
+        for(var f = 0; f < rooms.length; f++){
+          if(rooms[f].name === player.name){
+            rooms.splice(f,1);
+          }
+        }
+     }
+   }
   });
   
   client.on('disconnect', function() {
-    //console.log(players[client.id]);
-    for(var f = 0; f < rooms.length; f++){
-      if(rooms[f].name = players[client.id].name){
-        rooms.splice(f,1);
-      }
-    }
+    delete players[client.id];
+    // for(var f = 0; f < rooms.length; f++){
+    //   if(rooms[f].name = players[client.id].name){
+    //     rooms.splice(f,1);
+    //   }
+    // }
     // client.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
     // client.broadcast.emit("thread", "😔 " + players[client.id].name + " has left the room.😔");
-    delete players[client.id];
+    
   });
 });
 
@@ -200,11 +207,12 @@ setInterval(function() {
 
  }
 
+
   io.sockets.emit('state', { players: players, items: items, itemsThrown: itemsThrown, rooms: rooms });
 }, 1000 / 60);
 
 setInterval(function() {
-  console.log(rooms);
+ // console.log(itemsThrown)
 }, 1000);
 
 //running on 7777...

@@ -1,3 +1,4 @@
+//CHAT FUNCTIONALITY
 // initializing socket, connection to server
 var socket = io();
 socket.on("connect", function (data) {
@@ -22,6 +23,8 @@ $("form").submit(function () {
 
 
 
+
+//YOUTUBE EMBED FUNCTIONALITY
 function openVideo() {
   document.getElementById("video-hide").style.display = "none";
   document.getElementById("video-show").style.display = "block";
@@ -31,6 +34,8 @@ function closeVideo() {
   document.getElementById("video-hide").style.display = "block";
   document.getElementById("video-show").style.display = "none";
 }
+
+closeVideo();
 
 function play() {
   event.preventDefault();
@@ -43,6 +48,12 @@ socket.on("youtube", function (data) {
   document.getElementById("video-player").src = "https://www.youtube.com/embed/" + data.slice(32) + "?autoplay=1";
 });
 
+
+
+
+
+var letLogin = true;
+//SUBMISSION TO JOIN
 function login() {
   event.preventDefault();
   var localName = document.getElementById("name").value;
@@ -51,25 +62,34 @@ function login() {
     for(var id in data.players){
     if(data.players[id].name === localName){
       document.getElementById("error").innerHTML = "That name is taken. Please choose another.";
-      return false;
+      return;
+
     }
-    if(localName === ""){
-      document.getElementById("error").innerHTML = "Your name must include at least one character.";
-      return false;
-    }
-    if(localName.length > 20){
-      document.getElementById("error").innerHTML = "Your name cannot be longer than 20 characters.";
-      return false;
-    }
+
   }
-    
-  });
-  socket.emit("newPlayer", { color: localColor, name: localName });
+  if(localName === ""){
+    document.getElementById("error").innerHTML = "Your name must include at least one character.";
+    return false;
+  }
+  if(localName.length > 20){
+    document.getElementById("error").innerHTML = "Your name cannot be longer than 20 characters.";
+    return false;
+  }
+    if(letLogin === true){
+    socket.emit("newPlayer", { color: localColor, name: localName });
     document.getElementById("start").style.display = "none";
-    socket.emit("messages", "🎉" + localName + " has joined the room!🎉");
+    socket.emit("messages", "🎉" + localName + " has joined the room!🎉"); 
+    letLogin = false;
+  }
+
+  });
 }
 
 
+
+
+
+//OVERLAY AND MOUSE DETECTION
 var mouseX = 0;
 var mouseY = 0;
 var overlay = document.getElementById("overlay");
@@ -89,6 +109,11 @@ overlay.addEventListener("mousemove", function (evt) {
 }, false);
 
 
+
+
+
+
+//DATA TO EXPORT TO SERVER
 var playerData = {
   up: false,
   down: false,
@@ -98,8 +123,7 @@ var playerData = {
   emote: false,
   interact: false,
   mouseX: 0,
-  mouseY: 0,
-  room: "",
+  mouseY: 0
 };
 
 
@@ -157,6 +181,10 @@ document.addEventListener("keyup", function (event) {
 
 
 
+
+
+
+//COLOR GENERATOR FOR DANCE FLOOR
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -168,17 +196,43 @@ function getRandomColor() {
 
 
 
+
+
+
+
+
+
+//SVG AREA
 var svg = document.getElementById("svg");
 var NS = "http://www.w3.org/2000/svg";
 
+
+
 socket.on("state", function (data) {
+  var currentRoom = "";
+  var localName = document.getElementById("name").value;
+
+
   while (svg.lastChild) {
     svg.removeChild(svg.lastChild);
 }
 
+for (var e = 0; e < data.rooms.length; e++) {
+  if(localName === data.rooms[e].name && letLogin === false){
+    currentRoom = data.rooms[e].room;
+  }
+}
 
 
-var tiles = document.getElementsByClassName("danceFloor");
+
+//ROOM DETECTION AND DISPLAY
+
+
+
+
+if(currentRoom === ""){
+  document.getElementById("current-room").innerHTML = "Lobby";
+  var tiles = document.getElementsByClassName("danceFloor");
 for (var e = 0; e < 9; e++){
   tiles[e].style.fill = getRandomColor();
 }
@@ -187,12 +241,23 @@ for (var e = 0; e < 9; e++){
 
 
 
-
   for (var id in data.players) {
+    var wrongRoom = false;
+    for(var f = 0; f < data.rooms.length; f++){
+      if(data.rooms[f].name === data.players[id].name){
+        wrongRoom = true;
+      }
+    }
+  if(wrongRoom === false){
     var player = data.players[id];
 
   var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
   var degrees = rotateNumber * (180 / Math.PI) * -1 + 90;
+
+  if(player.x < 550 && player.x > 450 && player.y > 589 && player.name === localName){
+    socket.emit("roomChange", {name: player.name, room: "trivia"});
+    socket.emit("messages", localName + " is now in the trivia room."); 
+  }
 
   if(player.kick === true){
     var kickBody = document.createElementNS(NS, "circle");
@@ -244,13 +309,30 @@ for (var e = 0; e < 9; e++){
   hand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
   svg.appendChild(hand2); 
 
+  var eye1 = document.createElementNS(NS, "circle");
+  eye1.setAttribute("cx", player.x + 3);
+  eye1.setAttribute("cy", player.y - 4);
+  eye1.setAttribute("r", 2);
+  eye1.setAttribute("fill", "black");
+  eye1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(eye1); 
+
+  var eye2 = document.createElementNS(NS, "circle");
+  eye2.setAttribute("cx", player.x + 3);
+  eye2.setAttribute("cy", player.y + 4);
+  eye2.setAttribute("r", 2);
+  eye2.setAttribute("fill", "black");
+  eye2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(eye2); 
+
+
+
   var items = data.items;
   var itemsThrown = data.itemsThrown;
   var alreadyThrown = false;
 
-    if(player.interact && player.y > 500 && player.x < 100 || player.interact && player.y < 100 && player.x < 100){
+    if(player.interact){
       socket.emit("giveDonut", player.name);
-      console.log("gave donut");
     }
 
     for(var e = 0; e < itemsThrown.length; e++){
@@ -263,7 +345,6 @@ for (var e = 0; e < 9; e++){
       for(var g = 0; g < items.length; g++){
         if(items[g] = player){
           socket.emit("throwDonut", player.name);
-          console.log("threw donut");
           break;
         }
       }
@@ -272,16 +353,14 @@ for (var e = 0; e < 9; e++){
     for(var e = 0; e < items.length; e++){
     if(items[e] === player.name){
       var donut = document.createElementNS(NS, "text");
-      donut.setAttribute("x", player.x + player.emoteHeight + 10);
-      donut.setAttribute("y", player.y + 5);
+      donut.setAttribute("x", player.x + 10);
+      donut.setAttribute("y", player.y + -1 * player.emoteHeight + 5);
       donut.setAttribute("transform", "rotate(" + (degrees + 90) + " " + player.x + " " + player.y + ")");
       var donutFinal = document.createTextNode("🍩");
       donut.appendChild(donutFinal);
       svg.appendChild(donut);
     }
-  }
-
-
+    }
 
       var name = document.createElementNS(NS, "text");
       name.setAttribute("x", player.x);
@@ -296,7 +375,6 @@ for (var e = 0; e < 9; e++){
       name.setAttribute("x", player.x - resizeMiddle.width/2);
       svg.appendChild(name);
 
-  console.log("updated " + itemsThrown.length + " donuts");
   for(var e = 0; e < itemsThrown.length; e++){
 
     var thrownDonut = document.createElementNS(NS, "text");
@@ -307,10 +385,150 @@ for (var e = 0; e < 9; e++){
     svg.appendChild(thrownDonut);
   }
   }
+}
+}
+
+
+
+
+
+
+
+
+
+if (currentRoom === "trivia"){
+document.getElementById("current-room").innerHTML = "Trivia";
+
+var background = document.createElementNS(NS, "rect");
+background.setAttribute("x", 0);
+background.setAttribute("y", 0);
+background.setAttribute("width", 1000);
+background.setAttribute("height", 600);
+background.setAttribute("fill", "tan");
+svg.appendChild(background);
+
+var door = document.createElementNS(NS, "rect");
+door.setAttribute("x", 450);
+door.setAttribute("y", 0);
+door.setAttribute("width", 100);
+door.setAttribute("height", 11);
+door.setAttribute("fill", "brown");
+svg.appendChild(door);
+
+
+
+
+  for (var id in data.players) {
+    var wrongRoom = true;
+    for(var f = 0; f < data.rooms.length; f++){
+      if(data.rooms[f].name === data.players[id].name){
+        wrongRoom = false;
+      }
+    }
+  if(wrongRoom === false){
+    var player = data.players[id];  
+  
+    
+  var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
+  var degrees = rotateNumber * (180 / Math.PI) * -1 + 90;
+
+  if(player.x < 550 && player.x > 450 && player.y < 11){
+    socket.emit("roomChange", {name: player.name, room: ""});
+    socket.emit("messages", localName + " is now in the lobby."); 
+  }
+
+  if(player.kick === true){
+    var kickBody = document.createElementNS(NS, "circle");
+    kickBody.setAttribute("cx", player.x);
+    kickBody.setAttribute("cy", player.y);
+    kickBody.setAttribute("r", 14);
+    kickBody.setAttribute("fill", "white");
+    svg.appendChild(kickBody);
+
+    var kickHand1 = document.createElementNS(NS, "circle");
+    kickHand1.setAttribute("cx", player.x + player.emoteHeight);
+    kickHand1.setAttribute("cy", player.y - 15);
+    kickHand1.setAttribute("r", 8);
+    kickHand1.setAttribute("fill", "white");
+    kickHand1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+    svg.appendChild(kickHand1);
+
+    var kickHand2 = document.createElementNS(NS, "circle");
+    kickHand2.setAttribute("cx", player.x + player.emoteHeight);
+    kickHand2.setAttribute("cy", player.y + 15);
+    kickHand2.setAttribute("r", 8);
+    kickHand2.setAttribute("fill", "white");
+    kickHand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+    svg.appendChild(kickHand2);
+  }
+
+
+
+  var body = document.createElementNS(NS, "circle");
+  body.setAttribute("cx", player.x);
+  body.setAttribute("cy", player.y);
+  body.setAttribute("r", 10);
+  body.setAttribute("fill", player.color);
+  svg.appendChild(body);
+
+  var hand1 = document.createElementNS(NS, "circle");
+  hand1.setAttribute("cx", player.x + player.emoteHeight);
+  hand1.setAttribute("cy", player.y - 15);
+  hand1.setAttribute("r", 4);
+  hand1.setAttribute("fill", player.color);
+  hand1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(hand1);
+
+  var hand2 = document.createElementNS(NS, "circle");
+  hand2.setAttribute("cx", player.x + player.emoteHeight);
+  hand2.setAttribute("cy", player.y + 15);
+  hand2.setAttribute("r", 4);
+  hand2.setAttribute("fill", player.color);
+  hand2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(hand2); 
+
+  var eye1 = document.createElementNS(NS, "circle");
+  eye1.setAttribute("cx", player.x + 3);
+  eye1.setAttribute("cy", player.y - 4);
+  eye1.setAttribute("r", 2);
+  eye1.setAttribute("fill", "black");
+  eye1.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(eye1); 
+
+  var eye2 = document.createElementNS(NS, "circle");
+  eye2.setAttribute("cx", player.x + 3);
+  eye2.setAttribute("cy", player.y + 4);
+  eye2.setAttribute("r", 2);
+  eye2.setAttribute("fill", "black");
+  eye2.setAttribute("transform", "rotate(" + degrees + " " + player.x + " " + player.y + ")");
+  svg.appendChild(eye2); 
+
+
+
+  var name = document.createElementNS(NS, "text");
+  name.setAttribute("x", player.x);
+  name.setAttribute("y", player.y-11);
+  name.setAttribute("id", player.mouseX);
+  var nameFinal = document.createTextNode(player.name);
+  name.appendChild(nameFinal);
+  svg.appendChild(name);
+  var nameTemp = document.getElementById(player.mouseX)
+  var resizeMiddle = nameTemp.getBBox();
+  svg.removeChild(nameTemp);
+  name.setAttribute("x", player.x - resizeMiddle.width/2);
+  svg.appendChild(name);
+  }
+}
+
+
+}
 });
 
 
 
+
+
+//SEND DATA TO SERVER
 setInterval(function () {
   playerData.mouseX = mouseX;
   playerData.mouseY = mouseY;

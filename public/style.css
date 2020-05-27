@@ -74,12 +74,6 @@ html, body {
   flex-direction: column;
 }
 
-.video-show {
-  display: none;
-  flex-direction: column;
-  padding: 10;
-}
-
 .canvas-overlay {
   width: 1000;
   height: 600;
@@ -100,4 +94,10 @@ html, body {
 .messages {
   overflow-y: auto;
   height: 500px;
+}
+
+.video-show {
+  flex-direction: column;
+  padding: 10;
+  display: none;
 }
