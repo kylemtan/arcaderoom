@@ -247,15 +247,8 @@ for (var e = 0; e < 9; e++){
   var items = data.items;
   var itemsThrown = data.itemsThrown;
   var alreadyThrown = false;
-  var alreadyHas = false;
 
-  for(var e = 0; e < items.length; e++){
-    if(items[e] === player.name){
-    alreadyHas = true;
-  }
-}
-
-    if(player.interact && player.y > 500 && player.x < 100 && alreadyHas === false || player.interact && player.y < 100 && player.x < 100 && alreadyHas === false){
+    if(player.interact && player.y > 500 && player.x < 100 || player.interact && player.y < 100 && player.x < 100){
       socket.emit("giveDonut", player.name);
       console.log("gave donut");
     }

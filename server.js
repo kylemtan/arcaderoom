@@ -64,6 +64,10 @@ io.on("connection", function(client) {
       if(data === items[e]){
       items.splice(e,1);
     }
+    for(var f = 0; f < itemsThrown.length; f++){
+      if(data === itemsThrown[e].name){
+      itemsThrown.splice(f,1);
+    }
     }
     if(players[client.id].name === data){
       x = (players[client.id].mouseX - players[client.id].x)/30;
@@ -80,14 +84,6 @@ io.on("connection", function(client) {
       );
   }
   });
-  client.on("takeDonut",  function(data) {
-    for (var e = 0; e < items.length; e++){
-      if(data === items[e]){
-        items.splice(e,1);
-      }
-    }
-  });
-
   client.on('playerData', function(data) {
     var player = players[client.id] || {};
     if (data.left) {
