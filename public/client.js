@@ -249,6 +249,7 @@ for (var e = 0; e < 9; e++){
   var alreadyThrown = false;
     if(player.interact && player.y > 500 && player.x < 100 || player.interact && player.y < 100 && player.x < 100){
       socket.emit("giveDonut", player.name);
+      console.log("gave donut");
     }
 
     for(var e = 0; e < itemsThrown.length; e++){
@@ -261,6 +262,7 @@ for (var e = 0; e < 9; e++){
       for(var g = 0; g < items.length; g++){
         if(items[g] = player){
           socket.emit("throwDonut", player.name);
+          console.log("threw donut");
           break;
         }
       }
