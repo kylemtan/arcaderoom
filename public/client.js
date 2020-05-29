@@ -8,12 +8,23 @@ socket.on("connect", function (data) {
 // listener for 'thread' event, which updates messages
 socket.on("thread", function (data) {
   $("#thread").append("<li>" + data + "</li>");
+  var localName = document.getElementById("name").value;
+  var items = document.getElementById("thread").getElementsByTagName("li");
+  for(var e = 0; e < items.length; e++){
+    //var message = items[e].value.substring(1, localName.length);
+    console.log(items[e].value);
+    if(message === localName){
+      items[e].style.float = "right";
+    }
+  }
 });
 
 // sends message to server, resets & prevents default form action
 $("form").submit(function () {
+  var localName = document.getElementById("name").value;
   var message = $("#message").val();
-  socket.emit("messages", message);
+  fullMessage = localName + ": " + message;
+  socket.emit("messages", fullMessage);
   this.reset();
   return false;
 });
@@ -57,7 +68,66 @@ var letLogin = true;
 function login() {
   event.preventDefault();
   var localName = document.getElementById("name").value;
-  var localColor = document.getElementById("color").value;
+  var localColor;
+  if(letLogin === true){
+  if(document.getElementById('option1').checked){
+    localColor = "crimson";
+  } else if(document.getElementById('option2').checked){
+    localColor = "red";
+  } else if(document.getElementById('option3').checked){
+    localColor = "lightsalmon";
+  } else if(document.getElementById('option4').checked){
+    localColor = "orangered";
+  } else if(document.getElementById('option5').checked){
+    localColor = "coral";
+  } else if(document.getElementById('option6').checked){
+    localColor = "orange";
+  } else if(document.getElementById('option7').checked){
+    localColor = "khaki";
+  } else if(document.getElementById('option8').checked){
+    localColor = "darkkhaki";
+  } else if(document.getElementById('option9').checked){
+    localColor = "yellow";
+  } else if(document.getElementById('option10').checked){
+    localColor = "lemonchiffon";
+  } else if(document.getElementById('option11').checked){
+    localColor = "greenyellow";
+  } else if(document.getElementById('option12').checked){
+    localColor = "lawngreen";
+  } else if(document.getElementById('option13').checked){
+    localColor = "green";
+  } else if(document.getElementById('option14').checked){
+    localColor = "darkgreen";
+  } else if(document.getElementById('option15').checked){
+    localColor = "cyan";
+  } else if(document.getElementById('option16').checked){
+    localColor = "dodgerblue";
+  } else if(document.getElementById('option17').checked){
+    localColor = "blue";
+  } else if(document.getElementById('option18').checked){
+    localColor = "darkblue";
+  } else if(document.getElementById('option19').checked){
+    localColor = "mediumslateblue";
+  } else if(document.getElementById('option20').checked){
+    localColor = "pink";
+  } else if(document.getElementById('option21').checked){
+    localColor = "hotpink";
+  } else if(document.getElementById('option22').checked){
+    localColor = "magenta";
+  } else if(document.getElementById('option23').checked){
+    localColor = "indigo";
+  } else if(document.getElementById('option24').checked){
+    localColor = "white";
+  } else if(document.getElementById('option25').checked){
+    localColor = "black";
+  } else if(document.getElementById('option26').checked){
+    localColor = "gray";
+  } else {
+    document.getElementById("error").innerHTML = "Please choose a color.";
+      return;
+  }
+}
+
   socket.on("state", function (data) {
     for(var id in data.players){
     if(data.players[id].name === localName){
@@ -183,25 +253,6 @@ document.addEventListener("keyup", function (event) {
 
 
 
-
-//COLOR GENERATOR FOR DANCE FLOOR
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  } 
-  return color;
-}
-
-
-
-
-
-
-
-
-
 //SVG AREA
 var svg = document.getElementById("svg");
 var NS = "http://www.w3.org/2000/svg";
@@ -226,17 +277,7 @@ for (var e = 0; e < data.rooms.length; e++) {
 
 
 //ROOM DETECTION AND DISPLAY
-
-
-
-
 if(currentRoom === ""){
-  document.getElementById("current-room").innerHTML = "Lobby";
-  var tiles = document.getElementsByClassName("danceFloor");
-for (var e = 0; e < 9; e++){
-  tiles[e].style.fill = getRandomColor();
-}
-
 
 
 

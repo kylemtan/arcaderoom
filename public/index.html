@@ -5,12 +5,12 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    
+    <div class="whole">
     <h1 id="current-room">Lobby</h1>
     
     <div class="container">
       <div class="chat-container">
-      <h2>Chat</h2>
+      <h1>Chat</h1>
         <form>
           <input id="message" type="text" placeholder="message" />
           <input type="submit" value="Send" />
@@ -43,19 +43,9 @@
 
       </div>
 
-      <!-- <canvas id="canvas"></canvas> -->
 
       <svg id="svg-under" xmlns="http://www.w3.org/2000/svg">
         <rect x="710" y="400" width="190" height="190" style="fill:lightgray;"/>
-        <rect class="danceFloor" x="720" y="410" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="720" y="470" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="720" y="530" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="780" y="410" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="780" y="470" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="780" y="530" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="840" y="410" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="840" y="470" width="50" height="50" style="fill:black;"/>
-        <rect class="danceFloor" x="840" y="530" width="50" height="50" style="fill:black;"/>
 
         <circle cx="1000" cy="500" r="100" fill="lightgray" />
 
@@ -97,14 +87,147 @@
       <div class="start-contents">
       <h2>Welcome to arcade-chatroom!</h2>
       <form id="form">
-        <input id="name" value="JOE" type="text" placeholder="name" />
-        <input id="color" value="blue" type="text" placeholder="color" />
-        <p id="error"></p>
+        <input id="name" type="text" placeholder="Your name:" />
+
+        <div>
+        <label class="input-container">
+          <input type="radio" name="color" id="option1">
+          <span class="checkmark" id="crimson"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option2">
+          <span class="checkmark" id="red"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option3">
+          <span class="checkmark" id="lightsalmon"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option4">
+          <span class="checkmark" id="orangered"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option5">
+          <span class="checkmark" id="coral"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option6">
+          <span class="checkmark" id="orange"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option7">
+          <span class="checkmark" id="khaki"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option8">
+          <span class="checkmark" id="darkkhaki"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option9">
+          <span class="checkmark" id="yellow"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option10">
+          <span class="checkmark" id="lemonchiffon"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option11">
+          <span class="checkmark" id="greenyellow"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option12">
+          <span class="checkmark" id="lawngreen"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option13">
+          <span class="checkmark" id="green"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option14">
+          <span class="checkmark" id="darkgreen"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option15">
+          <span class="checkmark" id="cyan"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option16">
+          <span class="checkmark" id="dodgerblue"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option17">
+          <span class="checkmark" id="blue"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option18">
+          <span class="checkmark" id="darkblue"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option19">
+          <span class="checkmark" id="mediumslateblue"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option20">
+          <span class="checkmark" id="pink"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option21">
+          <span class="checkmark" id="hotpink"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option22">
+          <span class="checkmark" id="magenta"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option23">
+          <span class="checkmark" id="indigo"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option24">
+          <span class="checkmark" id="white"></span>
+        </label>
+
+        <label class="input-container">
+          <input type="radio" name="color" id="option25">
+          <span class="checkmark" id="black"></span>
+        </label>
+        
+        <label class="input-container">
+          <input type="radio" name="color" id="option26">
+          <span class="checkmark" id="gray"></span>
+        </label>
+      </div>
+
+        <p id="error">If you can't see the whole screen, use CTRL + - to make the screen smaller.</p>
         <button onclick="login()">Play!</button>
       </form>
     </div>
 
     </div>
+  </div>
 
   </body>
 </html>
