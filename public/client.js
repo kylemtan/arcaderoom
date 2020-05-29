@@ -432,7 +432,7 @@ svg.appendChild(door);
   var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
   var degrees = rotateNumber * (180 / Math.PI) * -1 + 90;
 
-  if(player.x < 550 && player.x > 450 && player.y < 11){
+  if(player.x < 550 && player.x > 450 && player.y < 11 && player.name === localName){
     socket.emit("roomChange", {name: player.name, room: ""});
     socket.emit("messages", localName + " is now in the lobby."); 
   }
