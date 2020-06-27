@@ -5,6 +5,11 @@ socket.on("connect", function (data) {
   socket.emit("join", "Hello server from client");
 });
 
+function scroll() {
+  var endOfMessages = document.querySelector("#thread").lastElementChild;
+  endOfMessages.scrollIntoView();
+}
+
 // listener for 'thread' event, which updates messages
 socket.on("thread", function (data) {
   $("#thread").append("<li>" + data + "</li>");
@@ -12,11 +17,11 @@ socket.on("thread", function (data) {
   var items = document.getElementById("thread").getElementsByTagName("li");
   for(var e = 0; e < items.length; e++){
     //var message = items[e].value.substring(1, localName.length);
-    console.log(items[e].value);
     if(message === localName){
       items[e].style.float = "right";
     }
   }
+  scroll();
 });
 
 // sends message to server, resets & prevents default form action
@@ -28,8 +33,6 @@ $("form").submit(function () {
   this.reset();
   return false;
 });
-
-
 
 
 
@@ -66,7 +69,8 @@ socket.on("youtube", function (data) {
 var letLogin = true;
 //SUBMISSION TO JOIN
 function login() {
-  event.preventDefault();
+  var localId = document.getElementById("room").value;
+  event.preventDefault();   
   var localName = document.getElementById("name").value;
   var localColor;
   if(letLogin === true){
@@ -146,7 +150,7 @@ function login() {
     return false;
   }
     if(letLogin === true){
-    socket.emit("newPlayer", { color: localColor, name: localName });
+    socket.emit("newPlayer", { color: localColor, name: localName, channel: localId });
     document.getElementById("start").style.display = "none";
     socket.emit("messages", "🎉" + localName + " has joined the room!🎉"); 
     letLogin = false;
@@ -274,7 +278,7 @@ for (var e = 0; e < data.rooms.length; e++) {
   }
 }
 
-
+var localId = document.getElementById("room").value;
 
 //ROOM DETECTION AND DISPLAY
 if(currentRoom === ""){
@@ -289,7 +293,7 @@ if(currentRoom === ""){
         wrongRoom = true;
       }
     }
-  if(wrongRoom === false){
+  if(wrongRoom === false && data.players[id].channel === localId){
     var player = data.players[id];
 
   var rotateNumber = Math.atan2(player.mouseX - player.x, player.mouseY - player.y);
@@ -466,7 +470,7 @@ svg.appendChild(door);
         wrongRoom = false;
       }
     }
-  if(wrongRoom === false){
+  if(wrongRoom === false && data.players[id].channel === localId){
     var player = data.players[id];  
   
     

@@ -45,7 +45,8 @@ io.on("connection", function(client) {
       emoteHeight: 0,
       emoteSpeed: -0.5,
       mouseX: 0, 
-      mouseY: 0
+      mouseY: 0,
+      channel: data.channel
     };
   });
 
